@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
-  // Force Railway rebuild
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx server/index.ts",
     "serve": "cross-env NODE_ENV=production tsx server/index.ts",
