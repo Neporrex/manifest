@@ -1,5 +1,5 @@
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/vercel-postgres";
+import { sql } from "@vercel/postgres";
 import * as schema from "@shared/schema";
 
 if (!process.env.DATABASE_URL) {
@@ -8,5 +8,4 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
-const sqlite = new Database(process.env.DATABASE_URL);
-export const db = drizzle(sqlite, { schema });
+export const db = drizzle(sql, { schema });
