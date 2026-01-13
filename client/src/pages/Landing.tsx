@@ -9,49 +9,54 @@ const container = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const item = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 }
+  show: { opacity: 1, y: 0 },
 };
 
 export default function Landing() {
   return (
     <div className="max-w-5xl mx-auto">
       <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
-        <motion.div 
+        <motion.div
           variants={container}
           initial="hidden"
           animate="show"
           className="space-y-8"
         >
-          <motion.div variants={item} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium uppercase tracking-wider">
+          <motion.div
+            variants={item}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium uppercase tracking-wider"
+          >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
             </span>
             v2.0 Now Available
           </motion.div>
-          
-          <motion.h1 variants={item} className="text-5xl md:text-7xl font-bold tracking-tight text-white leading-[1.1]">
-            Steam Manifests <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary/80 to-blue-500 glow-text">
-              Made Simple
-            </span>
+
+          <motion.h1
+            variants={item}
+            className="text-5xl md:text-7xl font-bold tracking-tight text-white leading-[1.1]"
+          >
+            Happy Manifests <br />
           </motion.h1>
 
-          <motion.p variants={item} className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed">
-            Generate and download Steam depot manifests instantly. 
-            Secure, fast, and fully automated for game developers and enthusiasts.
+          <motion.p
+            variants={item}
+            className="text-lg md:text-xl text-muted-foreground max-w-lg leading-relaxed"
+          >
+            Generate and download Steam depot manifests instantly !
           </motion.p>
 
           <motion.div variants={item} className="flex flex-wrap gap-4">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="rounded-full px-8 h-12 text-base font-semibold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all hover:scale-105"
               asChild
             >
@@ -62,7 +67,7 @@ export default function Landing() {
           </motion.div>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -70,33 +75,33 @@ export default function Landing() {
         >
           <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-blue-500/10 rounded-full blur-[100px] opacity-50 animate-pulse" />
           <div className="relative z-10 animate-float">
-             <img 
-               src={happyImg} 
-               alt="Happy Computer" 
-               className="w-full max-w-md drop-shadow-2xl"
-             />
+            <img
+              src={happyImg}
+              alt="Happy Computer"
+              className="w-full max-w-md drop-shadow-2xl"
+            />
           </div>
         </motion.div>
       </div>
 
-      <motion.div 
+      <motion.div
         variants={container}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true }}
         className="grid md:grid-cols-3 gap-6"
       >
-        <FeatureCard 
+        <FeatureCard
           icon={<Shield className="w-6 h-6 text-primary" />}
           title="Secure Access"
           description="Authenticated via Discord to ensure safe and tracked usage of the tool."
         />
-        <FeatureCard 
+        <FeatureCard
           icon={<Box className="w-6 h-6 text-blue-400" />}
           title="Depot Scraper"
           description="Automatically fetch depot lists from SteamDB without manual lookup."
         />
-        <FeatureCard 
+        <FeatureCard
           icon={<Download className="w-6 h-6 text-green-400" />}
           title="Instant Download"
           description="Get your manifest files as a ZIP archive ready for deployment."
@@ -106,7 +111,15 @@ export default function Landing() {
   );
 }
 
-function FeatureCard({ icon, title, description }: { icon: any, title: string, description: string }) {
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: any;
+  title: string;
+  description: string;
+}) {
   return (
     <motion.div variants={item}>
       <Card className="p-6 h-full glass-panel hover:bg-white/5 transition-colors border-white/5">
@@ -114,9 +127,7 @@ function FeatureCard({ icon, title, description }: { icon: any, title: string, d
           {icon}
         </div>
         <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-        <p className="text-muted-foreground leading-relaxed">
-          {description}
-        </p>
+        <p className="text-muted-foreground leading-relaxed">{description}</p>
       </Card>
     </motion.div>
   );

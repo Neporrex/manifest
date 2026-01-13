@@ -17,14 +17,14 @@ export function Layout({ children }: { children: ReactNode }) {
             <div className="flex items-center gap-3 cursor-pointer group">
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full group-hover:bg-primary/40 transition-all" />
-                <img 
-                  src={mascotImg} 
-                  alt="Mascot" 
-                  className="w-8 h-8 relative z-10 rounded-full" 
+                <img
+                  src={mascotImg}
+                  alt="Mascot"
+                  className="w-8 h-8 relative z-10 rounded-full"
                 />
               </div>
               <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
-                ManifestGen
+                HappyLua
               </span>
             </div>
           </Link>
@@ -32,16 +32,16 @@ export function Layout({ children }: { children: ReactNode }) {
           {user && (
             <div className="flex items-center gap-4">
               <div className="hidden md:flex items-center gap-2 text-sm text-muted-foreground bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
-                <img 
-                  src={user.avatar || ""} 
-                  alt={user.username} 
+                <img
+                  src={user.avatar || ""}
+                  alt={user.username}
                   className="w-5 h-5 rounded-full bg-background"
                 />
                 <span>{user.username}</span>
               </div>
-              <Button 
-                variant="ghost" 
-                size="icon" 
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => logout()}
                 className="text-muted-foreground hover:text-red-400 hover:bg-red-400/10 transition-colors"
               >
@@ -58,7 +58,7 @@ export function Layout({ children }: { children: ReactNode }) {
 
       <footer className="border-t border-white/5 py-8 mt-auto">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} ManifestGen. Built for speed.</p>
+          <p>© {new Date().getFullYear()} Happy Manifests.</p>
         </div>
       </footer>
     </div>
