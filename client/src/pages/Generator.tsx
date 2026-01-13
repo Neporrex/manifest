@@ -4,9 +4,30 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Download, Search, FileCode, CheckCircle2 } from "lucide-react";
+import { Loader2, Download, Search, FileCode, CheckCircle2, Sparkles, Zap } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
+
+const pageVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
 
 export default function Generator() {
   const [appId, setAppId] = useState("");
@@ -49,123 +70,213 @@ export default function Generator() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
-      <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
-          Manifest Generator
+    <motion.div
+      variants={pageVariants}
+      initial="hidden"
+      animate="show"
+      className="max-w-4xl mx-auto space-y-12"
+    >
+      {/* Header */}
+      <motion.div variants={cardVariants} className="text-center space-y-6">
+        <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full glass-card border-primary/20">
+          <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+          <span className="text-primary font-medium">Manifest Generator</span>
+          <div className="w-2 h-2 bg-primary rounded-full animate-ping" />
+        </div>
+
+        <h1 className="text-5xl md:text-7xl font-black tracking-tighter">
+          <span className="gradient-text">Create Your</span>
+          <br />
+          <span className="text-white">Manifest</span>
         </h1>
-        <p className="text-muted-foreground">
-          Enter your App ID to begin fetching depots
+
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          Enter your Steam App ID to automatically fetch available depots and generate
+          your custom manifest files.
         </p>
-      </div>
+      </motion.div>
 
-      <Card className="p-8 glass-panel space-y-8 relative overflow-hidden">
-        {/* Subtle decorative background glow */}
-        <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
-        
-        <div className="space-y-4 relative">
-          <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-            <Search className="w-4 h-4" /> Steam App ID
-          </label>
-          <div className="relative group">
-            <Input
-              value={appId}
-              onChange={(e) => setAppId(e.target.value)}
-              placeholder="e.g. 730"
-              className="h-14 text-lg bg-black/20 border-white/10 focus:border-primary/50 transition-all font-mono pl-4"
-            />
-            {isLoadingDepots && (
-              <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                <Loader2 className="w-5 h-5 animate-spin text-primary" />
-              </div>
-            )}
-          </div>
-          {isDepotError && (
-             <p className="text-sm text-red-400">Failed to fetch depots. Check App ID.</p>
-          )}
-        </div>
+      {/* Main Form */}
+      <motion.div variants={cardVariants}>
+        <Card className="glass-card p-10 relative overflow-hidden border-0">
+          {/* Background Effects */}
+          <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-[80px] animate-pulse-glow" />
+          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-accent/10 rounded-full blur-[80px] animate-pulse-glow" style={{ animationDelay: '2s' }} />
 
-        <AnimatePresence>
-          {depots && depots.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="space-y-4 overflow-hidden"
-            >
-              <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                <FileCode className="w-4 h-4" /> Select Depot
+          <div className="relative z-10 space-y-10">
+            {/* App ID Input */}
+            <div className="space-y-6">
+              <label className="text-sm font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-3">
+                <Search className="w-5 h-5 text-primary" />
+                Steam Application ID
+                <div className="flex-1 h-px bg-gradient-to-r from-primary/50 to-transparent" />
               </label>
-              <Select value={selectedDepot} onValueChange={setSelectedDepot}>
-                <SelectTrigger className="h-14 bg-black/20 border-white/10 focus:ring-primary/20">
-                  <SelectValue placeholder="Choose a depot to manifest" />
-                </SelectTrigger>
-                <SelectContent className="bg-[#0f0f13] border-white/10 text-white max-h-[300px]">
-                  {depots.map((depot) => (
-                    <SelectItem key={depot.id} value={depot.id} className="focus:bg-white/5 focus:text-primary cursor-pointer py-3">
-                      <span className="font-mono text-primary/70 mr-2">[{depot.id}]</span> {depot.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
-        <AnimatePresence>
-          {selectedDepot && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-4"
-            >
-              <div className="flex items-center justify-between">
-                 <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                   Manifest GID (Optional)
-                 </label>
-                 <span className="text-xs text-muted-foreground bg-white/5 px-2 py-0.5 rounded">Auto-detected if empty</span>
+              <div className="relative group">
+                <Input
+                  value={appId}
+                  onChange={(e) => setAppId(e.target.value)}
+                  placeholder="e.g. 730 (CS2), 440 (TF2), 570 (Dota 2)"
+                  className="glass-input h-16 text-xl bg-black/20 border-2 border-white/10 focus:border-primary/50 transition-all font-mono pl-6 pr-12 rounded-2xl text-center placeholder:text-muted-foreground/50"
+                />
+
+                {isLoadingDepots && (
+                  <div className="absolute right-6 top-1/2 -translate-y-1/2">
+                    <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                  </div>
+                )}
+
+                {appId && !isLoadingDepots && (
+                  <div className="absolute right-6 top-1/2 -translate-y-1/2">
+                    <CheckCircle2 className="w-6 h-6 text-green-400" />
+                  </div>
+                )}
               </div>
-              <Input
-                value={manifestId}
-                onChange={(e) => setManifestId(e.target.value)}
-                placeholder="Specific manifest ID (optional)"
-                className="h-14 bg-black/20 border-white/10 font-mono"
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
 
-        <div className="pt-4">
-          <Button
-            size="lg"
-            className="w-full h-14 text-lg font-bold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all active:scale-[0.99]"
-            disabled={!appId || !selectedDepot || isGenerating}
-            onClick={handleGenerate}
-          >
-            {isGenerating ? (
-              <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Generating...
-              </>
-            ) : (
-              <>
-                <Download className="mr-2 h-5 w-5" /> Generate & Download
-              </>
-            )}
-          </Button>
-        </div>
-      </Card>
-      
-      {/* Instructions / Hints */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="p-4 rounded-xl bg-white/5 border border-white/5 text-sm text-muted-foreground">
-          <strong className="text-white block mb-1">Tip:</strong>
-          Leave Manifest GID empty to fetch the latest version automatically.
-        </div>
-        <div className="p-4 rounded-xl bg-white/5 border border-white/5 text-sm text-muted-foreground">
-          <strong className="text-white block mb-1">Note:</strong>
-          This tool generates a .zip file containing the necessary manifest files.
-        </div>
-      </div>
-    </div>
+              {isDepotError && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm"
+                >
+                  Failed to fetch depots. Please check the App ID and try again.
+                </motion.div>
+              )}
+            </div>
+
+            {/* Depot Selection */}
+            <AnimatePresence>
+              {depots && depots.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0, y: 20 }}
+                  animate={{ opacity: 1, height: "auto", y: 0 }}
+                  exit={{ opacity: 0, height: 0, y: -20 }}
+                  className="space-y-6 overflow-hidden"
+                >
+                  <label className="text-sm font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-3">
+                    <FileCode className="w-5 h-5 text-blue-400" />
+                    Select Depot
+                    <div className="flex-1 h-px bg-gradient-to-r from-blue-400/50 to-transparent" />
+                  </label>
+
+                  <Select value={selectedDepot} onValueChange={setSelectedDepot}>
+                    <SelectTrigger className="glass-input h-16 bg-black/20 border-2 border-white/10 focus:border-blue-400/50 transition-all rounded-2xl text-lg">
+                      <SelectValue placeholder="Choose a depot to generate manifest for" />
+                    </SelectTrigger>
+                    <SelectContent className="glass-panel border-white/20 text-white max-h-[300px] rounded-2xl">
+                      {depots.map((depot) => (
+                        <SelectItem
+                          key={depot.id}
+                          value={depot.id}
+                          className="focus:bg-primary/10 focus:text-primary cursor-pointer py-4 px-6 text-lg hover:bg-white/5 transition-colors rounded-xl mx-2 my-1"
+                        >
+                          <div className="flex items-center gap-4">
+                            <span className="font-mono text-primary/80 bg-primary/10 px-3 py-1 rounded-lg text-sm">
+                              [{depot.id}]
+                            </span>
+                            <span className="flex-1">{depot.name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Manifest ID Input */}
+            <AnimatePresence>
+              {selectedDepot && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-6"
+                >
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-3">
+                      <Zap className="w-5 h-5 text-yellow-400" />
+                      Manifest GID
+                    </label>
+                    <span className="text-xs text-muted-foreground bg-yellow-400/10 px-3 py-1 rounded-full border border-yellow-400/20">
+                      Optional - Auto-detected if empty
+                    </span>
+                  </div>
+
+                  <Input
+                    value={manifestId}
+                    onChange={(e) => setManifestId(e.target.value)}
+                    placeholder="Specific manifest ID (leave empty for latest)"
+                    className="glass-input h-14 bg-black/20 border-2 border-white/10 focus:border-yellow-400/50 transition-all font-mono rounded-xl"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Generate Button */}
+            <div className="pt-8">
+              <Button
+                size="lg"
+                className="w-full h-16 text-xl font-bold shadow-2xl shadow-primary/20 hover:shadow-primary/40 transition-all active:scale-[0.98] rounded-2xl group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!appId || !selectedDepot || isGenerating}
+                onClick={handleGenerate}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] animate-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                <div className="relative z-10 flex items-center justify-center gap-4">
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="w-6 h-6 animate-spin" />
+                      <span>Generating Manifest...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Download className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                      <span>Generate & Download</span>
+                      <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                    </>
+                  )}
+                </div>
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </motion.div>
+
+      {/* Info Cards */}
+      <motion.div
+        variants={cardVariants}
+        className="grid md:grid-cols-2 gap-6"
+      >
+        <Card className="glass-card p-6 border-0 hover-lift">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
+              <Search className="w-6 h-6 text-blue-400" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-white mb-2">Pro Tip</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Leave the Manifest GID field empty to automatically fetch the latest version from Steam.
+                This ensures you always get the most up-to-date manifest.
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="glass-card p-6 border-0 hover-lift">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-green-500/20 flex items-center justify-center border border-green-500/30">
+              <Download className="w-6 h-6 text-green-400" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-white mb-2">What You Get</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Download a complete ZIP package containing your Lua script and manifest file,
+                ready for immediate use with SteamCMD or your deployment pipeline.
+              </p>
+            </div>
+          </div>
+        </Card>
+      </motion.div>
+    </motion.div>
   );
 }
