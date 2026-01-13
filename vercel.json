@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "dist/index.cjs",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["dist/**"]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "dist/index.cjs"
+    },
+    {
+      "src": "/auth/(.*)",
+      "dest": "dist/index.cjs"
+    },
+    {
+      "src": "/(.*\\..*)",
+      "dest": "/dist/public/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dist/public/index.html"
+    }
+  ],
+  "functions": {
+    "dist/index.cjs": {
+      "maxDuration": 30
+    }
+  }
+}
