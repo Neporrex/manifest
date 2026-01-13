@@ -177,5 +177,19 @@ depots = {
     res.send(content);
   });
 
+  // Chat Route with user ID check
+  app.post('/api/chat', (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ error: 'Unauthorized' });
+    
+    const { userId, message } = req.body;
+    
+    if (userId !== req.user.id) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    
+    // Process chat message
+    res.json({ response: `Echo: ${message}` });
+  });
+
   return httpServer;
 }
