@@ -1,0 +1,96 @@
+1. Project Purpose and Scope
+The goal is to build a web application that allows users to generate Steam manifest files (.lua and optionally .manifest) for use with tools like SteamTools or Millennium. This app will:
+
+Authenticate users via Discord OAuth (like generator.ryuu.lol) for access control and abuse prevention.
+Allow users to search/select Steam games by AppID.
+Fetch depot information from SteamDB public pages by scraping.
+Generate plausible manifest files with either fake or user-provided real manifest GIDs.
+Provide downloadable ZIP archives containing the generated files.
+Optionally maintain a local manifest database updated via SteamCMD or cron jobs for real manifest GIDs.
+Feature a minimal, dark-themed frontend UI similar to existing generators.
+Be deployable locally or on cloud platforms (Vercel, Heroku, etc.).
+2. Core Components and Technologies
+Component	Technology / Library	Purpose / Role
+Backend Framework	Node.js with Express	Server, API endpoints, OAuth, scraping, generation logic
+Authentication	Passport.js with passport-discord	Discord OAuth2 login
+HTTP Client	Axios	Fetch SteamDB pages for scraping
+HTML Parsing	Cheerio	Parse SteamDB HTML to extract depot info
+File Archiving	JSZip	Create ZIP files for download
+Session Management	express-session	Manage user sessions
+Environment Config	dotenv	Manage secrets and config
+Frontend	HTML, CSS, JavaScript	User interface, form handling, ZIP download
+Manifest Data Store	JSON file (db/manifests.json)	Store known manifests for depots
+3. Project Directory Structure (Arborescence)
+steam-manifest-generator/
+├── package.json                # Node.js dependencies and scripts
+├── server.js                   # Main backend server with routes and logic
+├── .env                        # Environment variables (Discord keys, secrets)
+├── db/
+│   └── manifests.json          # Local manifest GID database (JSON)
+├── public/
+│   ├── index.html              # Landing/login page
+│   ├── generator.html          # Main generator UI after login
+│   ├── style.css               # CSS styling (dark theme)
+│   └── script.js               # Frontend JS for interactions
+├── node_modules/               # Installed dependencies (gitignored)
+└── README.md                   # Setup and usage instructions
+4. Lua Manifest Generator Script (Standalone)
+You already have a solid Lua script that generates a .lua and a fake .manifest file based on input AppID, DepotID, and Manifest GID. This script can be used standalone or integrated into the backend logic to generate file contents dynamically.
+
+Key points:
+
+Uses default patterns (depotid = appid + 1).
+Generates plausible but fake manifest GIDs if none provided.
+Outputs two files: <appid>.lua and <appid>_<depotid>.manifest.
+Prints instructions for obtaining real manifest GIDs from SteamDB.
+5. Backend Implementation Highlights (server.js)
+Discord OAuth Setup: Using passport-discord strategy for login.
+Session Handling: Store user sessions securely.
+Routes:
+/auth/discord and /auth/discord/callback for login.
+/logout to end session.
+/api/generate POST endpoint to accept AppID, DepotID, Manifest GID, generate files, and respond with ZIP.
+/api/depots/:appid GET endpoint to scrape SteamDB depot info for given AppID.
+SteamDB Scraping: Use Axios + Cheerio to parse depot list from https://steamdb.info/app/{appid}/depots/.
+Manifest DB: Load db/manifests.json to provide known manifest GIDs for depots.
+File Generation: Generate Lua and manifest content dynamically (using Lua template logic ported to JS).
+ZIP Creation: Use JSZip to bundle generated files for download.
+Error Handling: Validate inputs, handle scraping failures, and unauthorized access.
+6. Frontend Implementation (public/)
+index.html: Landing page with Discord login button.
+generator.html: After login, form to input AppID, select depot (populated from backend), optionally enter manifest GID.
+style.css: Minimal dark theme styling inspired by ryuu.lol.
+script.js: Handles form submission, fetches depot info, requests generation, triggers ZIP download.
+7. Real Manifest GID Handling and Updates
+Real manifest GIDs are dynamic and require SteamDB login or SteamCMD/DepotDownloader tools.
+For production, implement a backend cron job that:
+Uses SteamCMD or DepotDownloader to fetch latest manifests.
+Updates db/manifests.json with fresh GIDs.
+This allows users to generate manifests with real, working GIDs without manual input.
+8. Additional Features and Enhancements
+Discord Bot Integration: For notifications or user support.
+Rate Limiting: Prevent abuse of generator endpoint.
+Multi-depot Support: Allow generating manifests for multiple depots at once.
+Auto-update Manifest IDs: Support SteamTools newer versions that do not require manifest files.
+User Preferences: Save last used AppID, depot, etc.
+Analytics: Track usage anonymously for improvement.
+9. Setup and Running Instructions
+Clone repo.
+Run npm install.
+Create Discord app, get Client ID/Secret.
+Create .env with:
+DISCORD_CLIENT_ID=your_id
+DISCORD_CLIENT_SECRET=your_secret
+SESSION_SECRET=random_string
+PORT=3000
+Run node server.js.
+Open http://localhost:3000 in browser.
+Login with Discord, use generator.
+10. Summary
+This project combines:
+
+A standalone Lua manifest generator script (provided).
+A Node.js backend with Discord OAuth, SteamDB scraping, manifest generation, and ZIP delivery.
+A minimal frontend UI for user interaction.
+Optional backend manifest DB updates for real manifest GIDs.
+It replicates the core functionality of sites like generator.ryuu.lol with extendability for real-time manifest updates and user authentication.
