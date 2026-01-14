@@ -106,10 +106,12 @@ export async function registerRoutes(
   });
 
   app.get(api.auth.me.path, (req, res) => {
-    if (req.isAuthenticated()) {
-      res.json(req.user);
-    } else {
+    try {
+      // Temporarily disable auth check for Vercel
       res.json(null);
+    } catch (error) {
+      console.error('Error in /api/user:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
   });
 
