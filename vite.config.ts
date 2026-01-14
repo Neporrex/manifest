@@ -1,30 +1,23 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import path from "path";
+import path from "node:path";
 
-const isProd = process.env.NODE_ENV === "production";
+const isReplit =
+  process.env.NODE_ENV !== "production" && !!process.env.REPL_ID;
 
 export default defineConfig({
   plugins: [
     react(),
 
-    // Replit-only plugins (DEV ONLY, NEVER on Vercel)
-    !isProd &&
-      process.env.REPL_ID &&
-      (await import("@replit/vite-plugin-runtime-error-modal")).default(),
-
-    !isProd &&
-      process.env.REPL_ID &&
-      (await import("@replit/vite-plugin-cartographer")).then((m) =>
-        m.cartographer(),
-      ),
-
-    !isProd &&
-      process.env.REPL_ID &&
-      (await import("@replit/vite-plugin-dev-banner")).then((m) =>
-        m.devBanner(),
-      ),
-  ].filter(Boolean),
+    // Replit-only plugins (sync + safe)
+    ...(isReplit
+      ? [
+          require("@replit/vite-plugin-runtime-error-modal").default(),
+          require("@replit/vite-plugin-cartographer").cartographer(),
+          require("@replit/vite-plugin-dev-banner").devBanner(),
+        ]
+      : []),
+  ],
 
   resolve: {
     alias: {
@@ -34,17 +27,8 @@ export default defineConfig({
     },
   },
 
-  root: ".",
-
   build: {
-    outDir: "dist",          // ✅ REQUIRED for Vercel
-    emptyOutDir: true
-  },
-
-  server: {
-    fs: {
-      strict: true,
-      deny: ["**/.*"],
-    },
+    outDir: "dist",
+    emptyOutDir: true,
   },
 });
