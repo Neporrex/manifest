@@ -26,7 +26,11 @@ export default defineConfig({
       "@assets": path.resolve(import.meta.dirname, "attached_assets"),
     },
   },
+<<<<<<< HEAD
   root: ".",
+=======
+  root: path.resolve(import.meta.dirname, "client"),
+>>>>>>> e482417fda255d66f8840ed65676594f8d053f1c
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
