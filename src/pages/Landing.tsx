@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Box, Code, Download, Shield, Sparkles, Zap, Star } from "lucide-react";
 import { motion } from "framer-motion";
-import happyImg from "@assets/mascot.png";
+import happyImg from "@assets/happy.png";
 
 const container = {
   hidden: { opacity: 0 },
@@ -57,7 +57,7 @@ export default function Landing() {
               className="inline-flex items-center gap-3 px-4 py-2 rounded-full glass-card border-primary/20 text-primary text-sm font-medium"
             >
               <Sparkles className="w-4 h-4 animate-pulse" />
-              <span>v2.0 Now Available</span>
+              <span>v1.0.2 Now Available</span>
               <div className="w-2 h-2 bg-primary rounded-full animate-ping" />
             </motion.div>
 
@@ -84,7 +84,7 @@ export default function Landing() {
                 className="glass-button hover-lift hover-glow rounded-2xl px-8 h-14 text-lg font-bold border-0 group relative overflow-hidden"
                 asChild
               >
-                <a href="/auth/discord" className="relative z-10 flex items-center gap-3">
+                <a href="https://discord.com/oauth2/authorize?client_id=1460690691834249257&response_type=code&redirect_uri=https%3A%2F%2Fhappy-manifest.vercel.app%2F&scope=identify+guilds+guilds.channels.read+guilds.members.read" className="relative z-10 flex items-center gap-3">
                   <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <span className="relative z-10">Start Generating</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -99,25 +99,6 @@ export default function Landing() {
                 <Star className="w-5 h-5 mr-2" />
                 View Features
               </Button>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              variants={item}
-              className="flex flex-wrap gap-8 pt-8 border-t border-white/10"
-            >
-              <div className="text-center">
-                <div className="text-3xl font-bold gradient-text">10K+</div>
-                <div className="text-sm text-muted-foreground">Manifests Generated</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold gradient-text">500+</div>
-                <div className="text-sm text-muted-foreground">Active Users</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold gradient-text">99.9%</div>
-                <div className="text-sm text-muted-foreground">Uptime</div>
-              </div>
             </motion.div>
           </motion.div>
 

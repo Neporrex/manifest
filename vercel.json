@@ -31,5 +31,6 @@
     "dist/index.cjs": {
       "maxDuration": 30
     }
-  }
+  },
+  "outputDirectory": "dist/public"
 }

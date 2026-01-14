@@ -42,7 +42,19 @@ export async function registerRoutes(
 
   const clientID = process.env.DISCORD_CLIENT_ID;
   const clientSecret = process.env.DISCORD_CLIENT_SECRET;
-  const callbackURL = `${process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : 'http://0.0.0.0:5000'}/auth/discord/callback`;
+
+  // Determine the base URL for callbacks
+  const getBaseUrl = () => {
+    if (process.env.VERCEL_URL) {
+      return `https://${process.env.VERCEL_URL}`;
+    }
+    if (process.env.REPLIT_DEV_DOMAIN) {
+      return `https://${process.env.REPLIT_DEV_DOMAIN}`;
+    }
+    return 'http://localhost:5000';
+  };
+
+  const callbackURL = `${getBaseUrl()}/auth/discord/callback`;
 
   if (clientID && clientSecret) {
     passport.use(new DiscordStrategy({
