@@ -1,7 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { api } from "@shared/routes";
+import { api } from "../shared/routes";
+import type { User } from "../shared/schema";
 import { z } from "zod";
 import passport from "passport";
 import { Strategy as DiscordStrategy } from "passport-discord";
@@ -223,7 +224,7 @@ In a real implementation, this would contain the actual Steam manifest data.`;
     
     const { userId, message } = req.body;
     
-    if (userId !== req.user.id) {
+    if (userId !== (req.user as User).id) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
     
