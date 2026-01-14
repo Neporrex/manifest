@@ -1,8 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
-import { api } from "../shared/routes";
-import type { User } from "../shared/schema";
+import { storage } from "./storage.js";
+import { api } from "../shared/routes.js";
+import type { User } from "../shared/schema.js";
 import { z } from "zod";
 import passport from "passport";
 import { Strategy as DiscordStrategy } from "passport-discord";
